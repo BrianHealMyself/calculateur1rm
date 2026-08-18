@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculateur de 1RM | HealMyself</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root{
+  --cream: #F3EFE4;
+  --cream-2: #EAE4D3;
+  --olive: #6B7256;
+  --olive-dark: #454A38;
+  --olive-deep: #2E3124;
+  --gold: #C9A15A;
+  --line: #D8D0BC;
+  --white: #FFFDF8;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--olive-deep);
+  font-family:'Libre Baskerville', Georgia, serif;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{
+  max-width:640px;
+  margin:0 auto;
+  padding:40px 24px 64px;
+}
+
+.eyebrow{
+  font-family:'Lato', sans-serif;
+  font-size:11px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--olive);
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+h1{
+  font-family:'Lato', sans-serif;
+  font-weight:900;
+  font-size:clamp(28px,6vw,38px);
+  letter-spacing:-0.01em;
+  margin:0 0 8px;
+  color:var(--olive-deep);
+}
+
+.subtitle{
+  font-family:'Libre Baskerville', serif;
+  font-style:italic;
+  color:var(--olive);
+  font-size:15px;
+  margin:0 0 32px;
+  max-width:46ch;
+}
+
+/* Barbell signature element */
+.barbell{
+  width:100%;
+  height:56px;
+  margin-bottom:36px;
+  display:block;
+}
+
+.card{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:4px;
+  padding:28px 26px;
+  margin-bottom:20px;
+}
+
+.field{
+  margin-bottom:20px;
+}
+.field:last-child{margin-bottom:0;}
+
+label{
+  display:block;
+  font-family:'Lato', sans-serif;
+  font-weight:700;
+  font-size:12px;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color:var(--olive-dark);
+  margin-bottom:7px;
+}
+
+.hint{
+  font-family:'Lato', sans-serif;
+  font-size:12px;
+  color:#8A8571;
+  margin-top:5px;
+  font-style:normal;
+  line-height:1.4;
+}
+
+select, input[type="number"]{
+  width:100%;
+  font-family:'Lato', sans-serif;
+  font-size:16px;
+  padding:12px 13px;
+  border:1px solid var(--line);
+  border-radius:3px;
+  background:var(--cream);
+  color:var(--olive-deep);
+  appearance:none;
+  -webkit-appearance:none;
+}
+
+select{
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1L7 7L13 1' stroke='%23454A38' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  padding-right:36px;
+}
+
+select:focus, input:focus{
+  outline:2px solid var(--gold);
+  outline-offset:1px;
+  border-color:var(--olive);
+}
+
+.row2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+@media (max-width:480px){
+  .row2{grid-template-columns:1fr;}
+}
+
+button.calc{
+  width:100%;
+  font-family:'Lato', sans-serif;
+  font-weight:700;
+  font-size:14px;
+  letter-spacing:0.03em;
+  text-transform:uppercase;
+  background:var(--olive-deep);
+  color:var(--cream);
+  border:none;
+  border-radius:3px;
+  padding:15px 20px;
+  cursor:pointer;
+  margin-top:6px;
+  transition:background 0.15s ease;
+}
+button.calc:hover{background:var(--olive);}
+button.calc:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+
+/* Results */
+#results{display:none;}
+#results.show{display:block;}
+
+.result-card{
+  background:var(--olive-deep);
+  color:var(--cream);
+  border-radius:4px;
+  padding:30px 26px;
+  margin-bottom:20px;
+}
+
+.result-label{
+  font-family:'Lato', sans-serif;
+  font-size:11px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.result-range{
+  font-family:'Lato', sans-serif;
+  font-weight:900;
+  font-size:clamp(32px,8vw,44px);
+  line-height:1;
+  margin-bottom:4px;
+}
+.result-range .unit{font-size:0.4em; font-weight:700; margin-left:4px; color:#C9C4AC;}
+
+.result-avg{
+  font-family:'Libre Baskerville', serif;
+  font-style:italic;
+  font-size:13px;
+  color:#C9C4AC;
+}
+
+.gauge{
+  margin-top:22px;
+}
+.gauge-track{
+  position:relative;
+  height:8px;
+  background:#4A4F3B;
+  border-radius:4px;
+  overflow:visible;
+}
+.gauge-fill{
+  position:absolute;
+  top:0; height:8px;
+  background:var(--gold);
+  border-radius:4px;
+}
+.gauge-marker{
+  position:absolute;
+  top:-4px;
+  width:2px;
+  height:16px;
+  background:var(--cream);
+}
+.gauge-labels{
+  display:flex;
+  justify-content:space-between;
+  font-family:'Lato', sans-serif;
+  font-size:11px;
+  color:#C9C4AC;
+  margin-top:8px;
+}
+
+.warning{
+  font-family:'Lato', sans-serif;
+  font-size:13px;
+  line-height:1.5;
+  background:#F0E6CC;
+  border-left:3px solid var(--gold);
+  padding:12px 15px;
+  border-radius:2px;
+  margin-bottom:14px;
+  color:var(--olive-deep);
+}
+.warning:last-child{margin-bottom:0;}
+.warning strong{font-weight:700;}
+
+table.pct{
+  width:100%;
+  border-collapse:collapse;
+  font-family:'Lato', sans-serif;
+  font-size:14px;
+}
+table.pct th, table.pct td{
+  text-align:left;
+  padding:9px 4px;
+  border-bottom:1px solid var(--line);
+}
+table.pct th{
+  font-size:11px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--olive);
+  font-weight:700;
+}
+table.pct td.val{font-weight:700; color:var(--olive-deep);}
+table.pct tr:last-child td{border-bottom:none;}
+
+details{margin-top:4px;}
+summary{
+  font-family:'Lato', sans-serif;
+  font-weight:700;
+  font-size:13px;
+  color:var(--olive-dark);
+  cursor:pointer;
+  list-style:none;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+summary::-webkit-details-marker{display:none;}
+summary:before{
+  content:'+';
+  font-size:16px;
+  color:var(--gold);
+}
+details[open] summary:before{content:'-';}
+
+.footer-note{
+  font-family:'Libre Baskerville', serif;
+  font-style:italic;
+  font-size:13px;
+  color:var(--olive);
+  text-align:center;
+  margin-top:32px;
+  line-height:1.6;
+}
+
+.brand{
+  font-family:'Lato', sans-serif;
+  font-weight:700;
+  font-size:11px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--olive);
+  text-align:center;
+  margin-top:10px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  * { transition:none !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">HealMyself · Outil gratuit</div>
+  <h1>Calculateur de 1RM</h1>
+  <p class="subtitle">Une estimation honnête de ta charge maximale, en fourchette plutôt qu'en faux chiffre précis.</p>
+
+  <svg class="barbell" viewBox="0 0 600 56" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="0" y="24" width="600" height="8" rx="4" fill="#D8D0BC"/>
+    <rect x="30" y="8" width="14" height="40" rx="2" fill="#6B7256"/>
+    <rect x="50" y="14" width="10" height="28" rx="2" fill="#6B7256"/>
+    <rect x="540" y="8" width="14" height="40" rx="2" fill="#6B7256"/>
+    <rect x="520" y="14" width="10" height="28" rx="2" fill="#6B7256"/>
+    <circle cx="300" cy="28" r="3" fill="#C9A15A"/>
+  </svg>
+
+  <div class="card">
+    <div class="field">
+      <label for="exercise">Mouvement</label>
+      <select id="exercise">
+        <option value="powerlifting">Squat / Soulevé de terre / Développé couché</option>
+        <option value="strict_press">Développé militaire (strict press)</option>
+        <option value="push_press">Push press</option>
+        <option value="olympic">Arraché / Épaulé-jeté</option>
+        <option value="other">Autre mouvement</option>
+      </select>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label for="weight">Charge soulevée (kg)</label>
+        <input type="text" inputmode="decimal" id="weight" placeholder="ex : 60">
+      </div>
+      <div class="field">
+        <label for="reps">Répétitions faites</label>
+        <input type="text" inputmode="numeric" id="reps" placeholder="ex : 5">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="rpe">Ressenti (RPE, optionnel)</label>
+      <select id="rpe">
+        <option value="">Je ne sais pas / je ne renseigne pas</option>
+        <option value="10">10, à l'échec, impossible d'en faire plus</option>
+        <option value="9">9, il m'en restait 1 en réserve</option>
+        <option value="8">8, il m'en restait 2 en réserve</option>
+        <option value="7">7, il m'en restait 3 en réserve</option>
+        <option value="6">6, série confortable, large marge</option>
+      </select>
+      <p class="hint">Le RPE affine le calcul : une série "facile" ne prédit pas le même max qu'une série à l'échec, même à poids et reps identiques.</p>
+    </div>
+
+    <div id="formError"></div>
+
+    <button class="calc" onclick="calculer()">Calculer mon estimation</button>
+  </div>
+
+  <div class="card">
+    <details>
+      <summary>Comment c'est calculé ?</summary>
+      <div class="hint" style="margin-top:12px; font-size:13px; line-height:1.6;">
+        <p>On combine trois formules reconnues (Epley, Brzycki, Lombardi) et on en tire une fourchette, pas un chiffre unique. Si tu renseignes ton RPE, le nombre de répétitions utilisé dans le calcul est ajusté pour se rapprocher de ta vraie limite.</p>
+        <p><strong>Plus tu t'éloignes d'une charge proche du 1RM, moins c'est précis.</strong> Autrement dit, plus tu fais de répétitions sur ta série de test, plus l'estimation devient incertaine. Une série à 3 répétitions donne un résultat bien plus solide qu'une série à 12.</p>
+        <p><strong>Ça dépend aussi de ton profil.</strong> Un profil endurant (fibres majoritairement lentes) enchaîne souvent plus de répétitions à un pourcentage donné de son max, ce qui peut faire surestimer son vrai 1RM. Un profil nerveux ou explosif (fibres rapides) atteint l'échec plus vite sur les séries longues, ce qui peut au contraire sous-estimer son potentiel. Le calculateur ne connaît pas ton profil, il ne peut donc pas corriger ce biais tout seul.</p>
+        <p><strong>En haltérophilie</strong> (arraché, épaulé-jeté), la technique et la vitesse d'exécution comptent autant que la force brute. La fatigue technique arrive souvent avant la fatigue musculaire : l'estimation est donc encore moins fiable que sur un mouvement de force pure.</p>
+        <p><strong>Développé militaire et push press</strong> ne se comportent pas pareil. Le développé militaire est un mouvement de force pure, sans aide des jambes : l'estimation y est assez stable. Le push press utilise le dip-drive des jambes pour lancer la barre, ce qui ajoute une dimension technique proche de l'haltérophilie et rend l'estimation moins précise.</p>
+      </div>
+    </details>
+  </div>
+
+  <div id="results">
+    <div class="result-card">
+      <div class="result-label">Estimation de ton 1RM</div>
+      <div class="result-range"><span id="rangeText">-</span><span class="unit">kg</span></div>
+      <div class="result-avg" id="avgText"></div>
+
+      <div class="gauge">
+        <div class="gauge-track">
+          <div class="gauge-fill" id="gaugeFill"></div>
+          <div class="gauge-marker" id="gaugeMarker"></div>
+        </div>
+        <div class="gauge-labels">
+          <span id="gaugeMin">-</span>
+          <span id="gaugeMax">-</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="warnings"></div>
+
+    <div class="card">
+      <details>
+        <summary>Voir les charges de travail par pourcentage</summary>
+        <p class="hint" style="margin:12px 0 14px;">Calculées à partir de la moyenne estimée, utile pour programmer tes séances (échauffement, force, technique...).</p>
+        <table class="pct" id="pctTable"></table>
+      </details>
+    </div>
+  </div>
+
+  <p class="footer-note">Cet outil donne une estimation, pas une vérité. Rien ne remplace un vrai test progressif encadré, surtout sur l'arraché et l'épaulé-jeté, où la technique compte autant que la force.</p>
+  <p class="brand">Nourris ton corps, apaise ton esprit.</p>
+
+</div>
+
+<script>
+function round(n){ return Math.round(n*2)/2; }
+
+function calcul1RM(weight, reps){
+  const epley = weight * (1 + reps/30);
+  const brzycki = reps < 37 ? weight * (36/(37-reps)) : null;
+  const lombardi = weight * Math.pow(reps, 0.10);
+  return [epley, brzycki, lombardi].filter(v => v !== null && isFinite(v));
+}
+
+function parseNum(str){
+  if(!str) return NaN;
+  return parseFloat(String(str).trim().replace(',', '.'));
+}
+
+function calculer(){
+  const weight = parseNum(document.getElementById('weight').value);
+  const reps = Math.round(parseNum(document.getElementById('reps').value));
+  const rpe = document.getElementById('rpe').value;
+  const exercise = document.getElementById('exercise').value;
+  const errorEl = document.getElementById('formError');
+
+  if(!weight || weight <= 0 || !reps || reps <= 0 || isNaN(weight) || isNaN(reps)){
+    errorEl.innerHTML = '<div class="warning">Renseigne une charge et un nombre de répétitions valides avant de calculer.</div>';
+    document.getElementById('results').classList.remove('show');
+    return;
+  }
+  errorEl.innerHTML = '';
+
+  const rir = rpe ? (10 - parseInt(rpe)) : 0;
+  const effectiveReps = Math.min(reps + rir, 15);
+
+  const estimates = calcul1RM(weight, effectiveReps);
+  const min = round(Math.min(...estimates));
+  const max = round(Math.max(...estimates));
+  const avg = round(estimates.reduce((a,b)=>a+b,0)/estimates.length);
+
+  document.getElementById('rangeText').textContent = min === max ? `${min}` : `${min} à ${max}`;
+  document.getElementById('avgText').textContent = `Estimation moyenne : ${avg} kg`;
+
+  // Gauge
+  const gaugeMin = min * 0.9;
+  const gaugeMax = max * 1.1;
+  const fillStart = ((min - gaugeMin) / (gaugeMax - gaugeMin)) * 100;
+  const fillEnd = ((max - gaugeMin) / (gaugeMax - gaugeMin)) * 100;
+  const markerPos = ((avg - gaugeMin) / (gaugeMax - gaugeMin)) * 100;
+
+  const fill = document.getElementById('gaugeFill');
+  fill.style.left = fillStart + '%';
+  fill.style.width = (fillEnd - fillStart) + '%';
+  document.getElementById('gaugeMarker').style.left = markerPos + '%';
+  document.getElementById('gaugeMin').textContent = round(gaugeMin) + ' kg';
+  document.getElementById('gaugeMax').textContent = round(gaugeMax) + ' kg';
+
+  // Warnings
+  const warningsEl = document.getElementById('warnings');
+  let warnings = [];
+
+  if(reps > 6){
+    warnings.push("<strong>Fiabilité réduite :</strong> au-delà de 6 répétitions, les formules d'estimation deviennent nettement moins précises. Si tu peux, refais le test avec une charge plus proche de ton max (2 à 5 reps).");
+  }
+  if(exercise === 'olympic'){
+    warnings.push("<strong>Arraché / épaulé-jeté :</strong> ces mouvements sont très techniques. La fatigue technique arrive souvent avant la fatigue musculaire, donc l'estimation ici est indicative, pas un vrai reflet de ton max. Un test réel encadré reste la meilleure option.");
+  }
+  if(exercise === 'push_press'){
+    warnings.push("<strong>Push press :</strong> la contribution des jambes (dip-drive) rend ce mouvement plus technique qu'un développé militaire strict. Deux séries à charge et reps identiques peuvent donner un vrai max différent selon la maîtrise du timing. Prends cette estimation avec plus de marge que pour un mouvement de force pure.");
+  }
+  if(!rpe){
+    warnings.push("Tu n'as pas renseigné de RPE : l'estimation est calculée en supposant que la série était proche de l'échec. Si elle était facile, ton vrai max est probablement plus élevé que la fourchette affichée.");
+  }
+
+  warningsEl.innerHTML = warnings.map(w => `<div class="warning">${w}</div>`).join('');
+
+  // Percentage table
+  const percents = [50,55,60,65,70,75,80,85,90,95];
+  let rows = '<tr><th>% du max</th><th>Charge</th></tr>';
+  percents.forEach(p => {
+    rows += `<tr><td>${p}%</td><td class="val">${round(avg * p/100)} kg</td></tr>`;
+  });
+  document.getElementById('pctTable').innerHTML = rows;
+
+  document.getElementById('results').classList.add('show');
+  document.getElementById('results').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+</script>
+
+</body>
+</html>
