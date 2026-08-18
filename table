@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Table de Baroga | HealMyself</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root{
+  --cream: #F3EFE4;
+  --olive: #6B7256;
+  --olive-dark: #454A38;
+  --olive-deep: #2E3124;
+  --gold: #C9A15A;
+  --line: #D8D0BC;
+  --white: #FFFDF8;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--olive-deep);
+  font-family:'Libre Baskerville', Georgia, serif;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{
+  max-width:680px;
+  margin:0 auto;
+  padding:40px 24px 64px;
+}
+
+.eyebrow{
+  font-family:'Lato', sans-serif;
+  font-size:11px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--olive);
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+h1{
+  font-family:'Lato', sans-serif;
+  font-weight:900;
+  font-size:clamp(26px,6vw,36px);
+  letter-spacing:-0.01em;
+  margin:0 0 8px;
+  color:var(--olive-deep);
+}
+
+.subtitle{
+  font-family:'Libre Baskerville', serif;
+  font-style:italic;
+  color:var(--olive);
+  font-size:15px;
+  margin:0 0 28px;
+  max-width:52ch;
+}
+
+.barbell{
+  width:100%;
+  height:56px;
+  margin-bottom:32px;
+  display:block;
+}
+
+.card{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:4px;
+  padding:26px 24px;
+  margin-bottom:20px;
+}
+
+.info-card{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-left:3px solid var(--gold);
+  border-radius:4px;
+  padding:26px 24px;
+  margin-bottom:24px;
+}
+
+.info-card h2{
+  font-family:'Lato', sans-serif;
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--olive-dark);
+  margin:20px 0 8px;
+}
+.info-card h2:first-child{margin-top:0;}
+
+.info-card p, .info-card li{
+  font-family:'Lato', sans-serif;
+  font-size:13.5px;
+  line-height:1.65;
+  color:var(--olive-deep);
+  margin:0 0 6px;
+}
+
+.info-card ul{
+  margin:6px 0 0;
+  padding-left:18px;
+}
+.info-card ul li{margin-bottom:8px;}
+.info-card ul li:last-child{margin-bottom:0;}
+
+.field{margin-bottom:20px;}
+.field:last-child{margin-bottom:0;}
+
+label{
+  display:block;
+  font-family:'Lato', sans-serif;
+  font-weight:700;
+  font-size:12px;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color:var(--olive-dark);
+  margin-bottom:7px;
+}
+
+.hint{
+  font-family:'Lato', sans-serif;
+  font-size:12px;
+  color:#8A8571;
+  margin-top:5px;
+  line-height:1.4;
+}
+
+input[type="text"]{
+  width:100%;
+  font-family:'Lato', sans-serif;
+  font-size:16px;
+  padding:12px 13px;
+  border:1px solid var(--line);
+  border-radius:3px;
+  background:var(--cream);
+  color:var(--olive-deep);
+}
+input:focus{
+  outline:2px solid var(--gold);
+  outline-offset:1px;
+  border-color:var(--olive);
+}
+
+.row2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+@media (max-width:480px){
+  .row2{grid-template-columns:1fr;}
+}
+
+.section-divider{
+  font-family:'Lato', sans-serif;
+  font-weight:700;
+  font-size:12px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--olive);
+  margin:22px 0 12px;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+}
+.field.section-divider-first{margin-top:0;}
+
+button.calc{
+  width:100%;
+  font-family:'Lato', sans-serif;
+  font-weight:700;
+  font-size:14px;
+  letter-spacing:0.03em;
+  text-transform:uppercase;
+  background:var(--olive-deep);
+  color:var(--cream);
+  border:none;
+  border-radius:3px;
+  padding:15px 20px;
+  cursor:pointer;
+  margin-top:6px;
+}
+button.calc:hover{background:var(--olive);}
+button.calc:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+
+#formError{margin-top:14px;}
+.warning{
+  font-family:'Lato', sans-serif;
+  font-size:13px;
+  line-height:1.5;
+  background:#F0E6CC;
+  border-left:3px solid var(--gold);
+  padding:12px 15px;
+  border-radius:2px;
+  color:var(--olive-deep);
+}
+
+#results{display:none;}
+#results.show{display:block;}
+
+.total-card{
+  background:var(--olive-deep);
+  color:var(--cream);
+  border-radius:4px;
+  padding:26px 24px;
+  margin-bottom:20px;
+  text-align:center;
+}
+.total-label{
+  font-family:'Lato', sans-serif;
+  font-size:11px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+  font-weight:700;
+  margin-bottom:8px;
+}
+.total-value{
+  font-family:'Lato', sans-serif;
+  font-weight:900;
+  font-size:clamp(30px,7vw,40px);
+  line-height:1;
+}
+.total-value .unit{font-size:0.4em; font-weight:700; margin-left:4px; color:#C9C4AC;}
+.total-detail{
+  font-family:'Libre Baskerville', serif;
+  font-style:italic;
+  font-size:12.5px;
+  color:#C9C4AC;
+  margin-top:8px;
+}
+
+.group-title{
+  font-family:'Lato', sans-serif;
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  color:var(--olive-dark);
+  margin:0 0 10px;
+}
+
+table.baroga{
+  width:100%;
+  border-collapse:collapse;
+  font-family:'Lato', sans-serif;
+  font-size:13.5px;
+  margin-bottom:22px;
+}
+table.baroga:last-child{margin-bottom:0;}
+table.baroga th, table.baroga td{
+  text-align:left;
+  padding:8px 4px;
+  border-bottom:1px solid var(--line);
+}
+table.baroga th{
+  font-size:10.5px;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  color:var(--olive);
+  font-weight:700;
+}
+table.baroga td.val{font-weight:700; color:var(--olive-deep); white-space:nowrap;}
+table.baroga td.pct-col{color:#8A8571; white-space:nowrap;}
+table.baroga tr:last-child td{border-bottom:none;}
+
+.diag-result{
+  margin-top:14px;
+  padding:14px 15px;
+  border-radius:3px;
+  font-family:'Lato', sans-serif;
+  font-size:13px;
+  line-height:1.55;
+}
+.diag-below{background:#F0E6CC; border-left:3px solid var(--gold);}
+.diag-above{background:#E9ECE3; border-left:3px solid var(--olive);}
+.diag-close{background:#EAF0E8; border-left:3px solid #6B7256;}
+
+.footer-note{
+  font-family:'Libre Baskerville', serif;
+  font-style:italic;
+  font-size:13px;
+  color:var(--olive);
+  text-align:center;
+  margin-top:32px;
+  line-height:1.6;
+}
+.brand{
+  font-family:'Lato', sans-serif;
+  font-weight:700;
+  font-size:11px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--olive);
+  text-align:center;
+  margin-top:10px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  * { transition:none !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">HealMyself · Outil gratuit haltérophilie</div>
+  <h1>Table de Baroga</h1>
+  <p class="subtitle">Tes objectifs de charge sur les mouvements semi-techniques, calculés à partir de ton total olympique.</p>
+
+  <svg class="barbell" viewBox="0 0 600 56" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="0" y="24" width="600" height="8" rx="4" fill="#D8D0BC"/>
+    <rect x="30" y="8" width="14" height="40" rx="2" fill="#6B7256"/>
+    <rect x="50" y="14" width="10" height="28" rx="2" fill="#6B7256"/>
+    <rect x="540" y="8" width="14" height="40" rx="2" fill="#6B7256"/>
+    <rect x="520" y="14" width="10" height="28" rx="2" fill="#6B7256"/>
+    <circle cx="300" cy="28" r="3" fill="#C9A15A"/>
+  </svg>
+
+  <div class="info-card">
+    <h2>Qu'est-ce que la table de Baroga</h2>
+    <p>Lazăr Baroga, ancien haltérophile roumain, a étudié les charges soulevées par de nombreux athlètes de haut niveau sur les mouvements semi-techniques (tirages, flexions, jetés aux supports...) et les a mises en relation avec leur total olympique, c'est à dire la somme de leur max à l'arraché et à l'épaulé-jeté. Le résultat est un tableau de pourcentages qui indique, pour chaque mouvement d'assistance, la charge théorique que tu devrais pouvoir soulever si ta technique et ta force sont bien équilibrées.</p>
+
+    <h2>Comment c'est calculé</h2>
+    <p>1. On additionne ton max à l'arraché et ton max à l'épaulé-jeté pour obtenir ton total olympique.<br>
+    2. On applique à ce total le pourcentage propre à chaque mouvement (par exemple, le squat arrière représente en moyenne 75 % du total olympique).<br>
+    3. Le résultat te donne une charge cible indicative pour chaque mouvement d'assistance.</p>
+
+    <h2>Comment t'en servir</h2>
+    <p>Renseigne ton max à l'arraché et à l'épaulé-jeté ci-dessous. Tu obtiens ton total olympique et les charges cibles pour tous les mouvements d'assistance. Tu peux aussi renseigner ton squat actuel pour comparer directement ta charge réelle à ta charge cible.</p>
+
+    <h2>En quoi c'est pertinent</h2>
+    <p>Ça te donne un point de repère rapide pour situer où travailler. Si ton squat arrière est nettement en dessous de la cible, tu manques probablement de force brute pour soutenir ton total. S'il est nettement au dessus, tu as la force mais pas encore le transfert technique vers l'arraché et l'épaulé-jeté : c'est la vitesse et la technique qu'il faut travailler, pas la charge.</p>
+
+    <h2>Quand ça ne l'est plus</h2>
+    <ul>
+      <li>C'est une moyenne construite à partir d'athlètes de haut niveau, il y a plusieurs décennies. Ta morphologie (longueur de bras, de jambes, mobilité) fait varier ces ratios d'une personne à l'autre.</li>
+      <li>Ce n'est pas un objectif à atteindre à tout prix : un écart ponctuel ne veut rien dire, c'est la tendance sur plusieurs mois qui compte.</li>
+      <li>Ça ne remplace jamais l'œil d'un coach qui analyse ta technique en vidéo. Le tableau te dit où regarder, pas ce qui ne va pas précisément.</li>
+      <li>Moins pertinent si ta technique n'est pas encore stabilisée : impossible de tirer une conclusion fiable tant que le mouvement lui-même change d'une série à l'autre.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label for="snatch">Max à l'arraché (kg)</label>
+      <input type="text" inputmode="decimal" id="snatch" placeholder="ex : 70">
+    </div>
+    <div class="field">
+      <label for="cleanjerk">Max à l'épaulé-jeté (kg)</label>
+      <input type="text" inputmode="decimal" id="cleanjerk" placeholder="ex : 90">
+    </div>
+
+    <div class="section-divider">Comparaison squat (optionnel)</div>
+    <p class="hint" style="margin-bottom:16px;">Renseigne ton squat actuel pour voir directement où tu te situes par rapport à ta cible.</p>
+    <div class="row2">
+      <div class="field">
+        <label for="frontSquat">Squat devant actuel (kg)</label>
+        <input type="text" inputmode="decimal" id="frontSquat" placeholder="optionnel">
+      </div>
+      <div class="field">
+        <label for="backSquat">Squat arrière actuel (kg)</label>
+        <input type="text" inputmode="decimal" id="backSquat" placeholder="optionnel">
+      </div>
+    </div>
+
+    <div id="formError"></div>
+    <button class="calc" onclick="calculer()">Calculer mes objectifs</button>
+  </div>
+
+  <div id="results">
+    <div class="total-card">
+      <div class="total-label">Ton total olympique</div>
+      <div class="total-value"><span id="totalValue">-</span><span class="unit">kg</span></div>
+      <div class="total-detail" id="totalDetail"></div>
+    </div>
+
+    <div class="card">
+      <div class="group-title">Squats</div>
+      <table class="baroga" id="tableSquat"></table>
+      <div id="squatDiagnostics"></div>
+    </div>
+
+    <div class="card">
+      <div class="group-title">Mouvements liés à l'arraché</div>
+      <table class="baroga" id="tableArrache"></table>
+    </div>
+
+    <div class="card">
+      <div class="group-title">Mouvements liés à l'épaulé</div>
+      <table class="baroga" id="tableEpaule"></table>
+    </div>
+
+    <div class="card">
+      <div class="group-title">Mouvements liés au jeté</div>
+      <table class="baroga" id="tableJete"></table>
+    </div>
+  </div>
+
+  <p class="footer-note">Ces charges sont des repères, pas des objectifs figés. Ta progression sur plusieurs mois compte plus qu'un chiffre isolé un jour donné.</p>
+  <p class="brand">Nourris ton corps, apaise ton esprit.</p>
+
+</div>
+
+<script>
+const barogaData = {
+  squat: [
+    {name:"Squat devant (clavicule)", pct:62},
+    {name:"Squat arrière (nuque)", pct:75}
+  ],
+  arrache: [
+    {name:"Arraché flexion (plots ou sol)", pct:42},
+    {name:"Arraché puissance", pct:41},
+    {name:"Arraché debout", pct:38},
+    {name:"Arraché debout des plots", pct:36},
+    {name:"Arraché force", pct:28},
+    {name:"Tirage lourd d'arraché", pct:53},
+    {name:"Tirage lourd d'arraché des plots", pct:55},
+    {name:"Tirage haut d'arraché", pct:44.4},
+    {name:"Flexion d'arraché", pct:44.4},
+    {name:"Chute d'arraché", pct:25},
+    {name:"Chute d'arraché nuque", pct:44.4},
+    {name:"Tirage de bras d'arraché", pct:20},
+    {name:"Développé nuque (arraché)", pct:20}
+  ],
+  epaule: [
+    {name:"Épaulé flexion des plots", pct:54},
+    {name:"Épaulé puissance", pct:52},
+    {name:"Épaulé debout", pct:45},
+    {name:"Épaulé debout des plots", pct:47},
+    {name:"Épaulé force", pct:35},
+    {name:"Tirage lourd d'épaulé", pct:72},
+    {name:"Tirage lourd d'épaulé des plots", pct:78},
+    {name:"Tirage de bras d'épaulé", pct:25}
+  ],
+  jete: [
+    {name:"Jeté supports", pct:55.6},
+    {name:"Jeté nuque", pct:60},
+    {name:"Jeté debout", pct:52},
+    {name:"Jeté nuque puissance", pct:55.6},
+    {name:"Chute de jeté", pct:25},
+    {name:"Chute de jeté nuque", pct:25},
+    {name:"Jeté force", pct:32},
+    {name:"Jeté force nuque", pct:32}
+  ]
+};
+
+function round(n){ return Math.round(n*2)/2; }
+
+function parseNum(str){
+  if(!str) return NaN;
+  return parseFloat(String(str).trim().replace(',', '.'));
+}
+
+function buildTable(elId, list, total){
+  let rows = '<tr><th>Mouvement</th><th>% du total</th><th>Cible</th></tr>';
+  list.forEach(item => {
+    rows += `<tr><td>${item.name}</td><td class="pct-col">${item.pct}%</td><td class="val">${round(total * item.pct/100)} kg</td></tr>`;
+  });
+  document.getElementById(elId).innerHTML = rows;
+}
+
+function diagnosticSquat(label, actual, target){
+  if(isNaN(actual) || actual <= 0) return '';
+  const diff = actual - target;
+  const diffPct = round((diff/target)*100);
+  let cls, message;
+  if(diffPct <= -8){
+    cls = 'diag-below';
+    message = `Ton ${label} est en dessous de la cible (écart de ${Math.abs(diffPct)} %). Tu manques probablement de force brute pour soutenir ton total actuel : c'est un axe de travail à prioriser.`;
+  } else if(diffPct >= 8){
+    cls = 'diag-above';
+    message = `Ton ${label} dépasse largement la cible (écart de +${diffPct} %). Tu as la force, mais pas encore le transfert technique vers l'arraché et l'épaulé-jeté : travaille la vitesse et la technique plutôt que la charge.`;
+  } else {
+    cls = 'diag-close';
+    message = `Ton ${label} est proche de la cible (écart de ${diffPct > 0 ? '+' : ''}${diffPct} %). Force et technique semblent bien équilibrées sur ce mouvement.`;
+  }
+  return `<div class="diag-result ${cls}">${message}</div>`;
+}
+
+function calculer(){
+  const snatch = parseNum(document.getElementById('snatch').value);
+  const cleanjerk = parseNum(document.getElementById('cleanjerk').value);
+  const frontSquat = parseNum(document.getElementById('frontSquat').value);
+  const backSquat = parseNum(document.getElementById('backSquat').value);
+  const errorEl = document.getElementById('formError');
+
+  if(!snatch || snatch <= 0 || !cleanjerk || cleanjerk <= 0 || isNaN(snatch) || isNaN(cleanjerk)){
+    errorEl.innerHTML = '<div class="warning">Renseigne ton max à l\'arraché et à l\'épaulé-jeté avant de calculer.</div>';
+    document.getElementById('results').classList.remove('show');
+    return;
+  }
+  errorEl.innerHTML = '';
+
+  const total = snatch + cleanjerk;
+
+  document.getElementById('totalValue').textContent = round(total);
+  document.getElementById('totalDetail').textContent = `Arraché ${round(snatch)} kg + Épaulé-jeté ${round(cleanjerk)} kg`;
+
+  buildTable('tableSquat', barogaData.squat, total);
+  buildTable('tableArrache', barogaData.arrache, total);
+  buildTable('tableEpaule', barogaData.epaule, total);
+  buildTable('tableJete', barogaData.jete, total);
+
+  let diagHtml = '';
+  diagHtml += diagnosticSquat('squat devant', frontSquat, total * 0.62);
+  diagHtml += diagnosticSquat('squat arrière', backSquat, total * 0.75);
+  document.getElementById('squatDiagnostics').innerHTML = diagHtml;
+
+  document.getElementById('results').classList.add('show');
+  document.getElementById('results').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+</script>
+
+</body>
+</html>
